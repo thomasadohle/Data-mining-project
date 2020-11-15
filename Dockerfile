@@ -7,6 +7,12 @@ FROM ubuntu:latest
 RUN apt-get update && apt-get install -y python3 \
 	python3-pip
 
+RUN mkdir demo
+WORKDIR demo/
+COPY . .
+
+WORKDIR src/
+
 #Install jupyter
 RUN pip3 install jupyter
 
@@ -17,11 +23,10 @@ RUN pip3 install matplotlib
 RUN pip3 install sklearn
 
 #Create system user
-RUN useradd -ms /bin/bash jupyter
-USER jupyter
-WORKDIR /home/jupyter
+#RUN useradd -ms /bin/bash jupyter
+#USER jupyter
+WORKDIR /demo
 
 #Start notebook
-ENTRYPOINT ["jupyter", "notebook", "--ip=*"]
+ENTRYPOINT ["jupyter", "notebook", "--ip=*", "--allow-root"]
 
-RUN docker run -it -v notebooks:/home/jupyter -p 8888:8888 jupyter-notebook
